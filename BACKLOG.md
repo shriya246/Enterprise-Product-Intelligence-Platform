@@ -18,9 +18,9 @@ Living feature checklist. Items are tagged by the theme they originated from (Sp
 
 ## Feedback Intelligence + AI Insights v1 [Sprint 2]
 
-- [ ] Feedback ingestion: manual entry form
-- [ ] Feedback ingestion: CSV import
-- [ ] AI clustering of feedback into themes + sentiment tagging (Groq + pgvector, wired but unconnected)
+- [x] Feedback ingestion: manual entry form
+- [x] Feedback ingestion: CSV import
+- [x] AI clustering of feedback into themes + sentiment tagging (Groq, wired but unconnected)
 - [ ] AI Chat Assistant v1: NL Q&A against org's own analytics + feedback data
 - [ ] Cohort analysis view
 - [ ] Feature adoption view
