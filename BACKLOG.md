@@ -13,7 +13,7 @@ Living feature checklist. Items are tagged by the theme they originated from (Sp
 - [x] Audit log: writes on sensitive actions (member role changes, org settings)
 - [x] Event ingestion: SDK snippet (`public/pulseai-sdk.js`) + `/api/events` route + Zod validation + rate limiting
 - [x] Analytics dashboard v1: DAU/WAU/MAU cards, retention curve, basic funnel builder
-- [ ] CI/CD: `vercel.json`, GitHub Actions workflow (lint + typecheck + build on push)
+- [x] CI/CD: `vercel.json`, GitHub Actions workflow (lint + typecheck + build on push)
 - [x] PM docs: `PRD.md`, `PERSONAS.md`, `COMPETITIVE_ANALYSIS.md`, `KPI_FRAMEWORK.md`, `ROADMAP.md`
 
 ## Feedback Intelligence + AI Insights v1 [Sprint 2]
