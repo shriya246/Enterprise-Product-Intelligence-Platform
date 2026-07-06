@@ -1,0 +1,41 @@
+# Backlog
+
+Living feature checklist. Items are tagged by the theme they originated from (Sprint 1/2/3 in the original plan) but are being built as one continuous pass. Checked off as each vertical slice ships and is pushed.
+
+## Foundation & Core Data Layer [Sprint 1]
+
+- [ ] Project scaffold, tooling, `.gitignore`, dependencies
+- [ ] Database schema & migrations: organizations, org_members (RBAC), audit_log, events, features, feedback_items
+- [ ] Supabase client wiring (browser + server) with env placeholders
+- [ ] Auth: sign up, log in, log out, session handling
+- [ ] Organizations: create org, invite/manage members, RBAC (owner/admin/member) enforced via RLS
+- [ ] Audit log: writes on sensitive actions (member role changes, org settings)
+- [ ] Event ingestion: SDK snippet (`public/pulseai-sdk.js`) + `/api/events` route + Zod validation + rate limiting
+- [ ] Analytics dashboard v1: DAU/WAU/MAU cards, retention curve, basic funnel builder
+- [ ] CI/CD: `vercel.json`, GitHub Actions workflow (lint + typecheck + build on push)
+- [ ] PM docs: `PRD.md`, `PERSONAS.md`, `COMPETITIVE_ANALYSIS.md`, `KPI_FRAMEWORK.md`, `ROADMAP.md`
+
+## Feedback Intelligence + AI Insights v1 [Sprint 2]
+
+- [ ] Feedback ingestion: manual entry form
+- [ ] Feedback ingestion: CSV import
+- [ ] AI clustering of feedback into themes + sentiment tagging (Groq + pgvector, wired but unconnected)
+- [ ] AI Chat Assistant v1: NL Q&A against org's own analytics + feedback data
+- [ ] Cohort analysis view
+- [ ] Feature adoption view
+- [ ] PM docs: `ARCHITECTURE.md` (full schema + API spec), `EXECUTIVE_SUMMARY.md` (v1)
+
+## Roadmap, PRD Generator, Experimentation, Executive Layer [Sprint 3]
+
+- [ ] Roadmap module: create/prioritize items, dependencies, timeline view
+- [ ] AI-recommended roadmap prioritization (engagement + feedback signals)
+- [ ] AI PRD Generator: feature idea → user stories, acceptance criteria, success metrics, risks
+- [ ] Feature flags: create/toggle flags scoped to org
+- [ ] A/B experimentation: simple split + significance check (simple-statistics)
+- [ ] Executive Dashboard: single-screen KPI rollup
+- [ ] Hardening: RLS policy audit doc, rate-limit audit, Sentry wiring, basic test coverage on core flows
+- [ ] PM docs: `GTM_STRATEGY.md`, `PRICING_STRATEGY.md`, `EXECUTIVE_SUMMARY.md` (final), `EXECUTIVE_PRESENTATION.md`
+
+## Deferred (explicitly out of scope for this pass)
+
+- [ ] Connecting real Supabase/Groq/Upstash/Vercel/Sentry accounts and running live end-to-end (user will wire up manually)
