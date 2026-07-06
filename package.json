@@ -1,12 +1,13 @@
 {
-  "name": "pulseai-scaffold-tmp",
+  "name": "pulseai",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest run"
   },
   "dependencies": {
     "@sentry/nextjs": "^10.63.0",

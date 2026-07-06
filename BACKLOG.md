@@ -4,11 +4,12 @@ Living feature checklist. Items are tagged by the theme they originated from (Sp
 
 ## Foundation & Core Data Layer [Sprint 1]
 
-- [ ] Project scaffold, tooling, `.gitignore`, dependencies
-- [ ] Database schema & migrations: organizations, org_members (RBAC), audit_log, events, features, feedback_items
-- [ ] Supabase client wiring (browser + server) with env placeholders
-- [ ] Auth: sign up, log in, log out, session handling
-- [ ] Organizations: create org, invite/manage members, RBAC (owner/admin/member) enforced via RLS
+- [x] Project scaffold, tooling, `.gitignore`, dependencies
+- [x] Database schema & migrations: organizations, org_members (RBAC), audit_log, events, features, feedback_items
+- [x] Supabase client wiring (browser + server) with env placeholders
+- [x] Auth: sign up, log in, log out, session handling
+- [x] Organizations: create org, RBAC (owner/admin/member) enforced via RLS
+- [ ] Org settings: invite/manage members, role changes
 - [ ] Audit log: writes on sensitive actions (member role changes, org settings)
 - [ ] Event ingestion: SDK snippet (`public/pulseai-sdk.js`) + `/api/events` route + Zod validation + rate limiting
 - [ ] Analytics dashboard v1: DAU/WAU/MAU cards, retention curve, basic funnel builder

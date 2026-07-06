@@ -31,6 +31,7 @@ export interface Database {
           name: string;
           slug: string;
           created_by: string;
+          write_key: string;
           created_at: string;
         };
         Insert: {
@@ -38,6 +39,7 @@ export interface Database {
           name: string;
           slug: string;
           created_by: string;
+          write_key?: string;
           created_at?: string;
         };
         Update: Partial<{
