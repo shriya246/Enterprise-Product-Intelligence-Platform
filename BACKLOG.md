@@ -22,8 +22,8 @@ Living feature checklist. Items are tagged by the theme they originated from (Sp
 - [x] Feedback ingestion: CSV import
 - [x] AI clustering of feedback into themes + sentiment tagging (Groq, wired but unconnected)
 - [x] AI Chat Assistant v1: NL Q&A against org's own analytics + feedback data
-- [ ] Cohort analysis view
-- [ ] Feature adoption view
+- [x] Cohort analysis view
+- [x] Feature adoption view
 - [ ] PM docs: `ARCHITECTURE.md` (full schema + API spec), `EXECUTIVE_SUMMARY.md` (v1)
 
 ## Roadmap, PRD Generator, Experimentation, Executive Layer [Sprint 3]
