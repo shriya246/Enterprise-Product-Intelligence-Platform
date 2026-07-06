@@ -2,11 +2,15 @@ import { requireOrgMembership } from "@/lib/org";
 import { createClient } from "@/lib/supabase/server";
 import {
   activeUsers,
+  cohortRetentionTable,
   dailyActiveUsersSeries,
+  featureAdoption,
   weeklyRetentionCurve,
   type UsageEvent,
 } from "@/lib/analytics";
 import { DailyActiveUsersChart, FunnelBuilder, RetentionChart, StatTiles } from "./charts";
+import { CohortHeatmap } from "./cohort-heatmap";
+import { FeatureAdoption } from "./feature-adoption";
 
 const LOOKBACK_DAYS = 90;
 
@@ -42,8 +46,17 @@ export default async function DashboardPage({
   const mau = activeUsers(events, 30, asOf);
   const dailySeries = dailyActiveUsersSeries(events, 30, asOf);
   const retention = weeklyRetentionCurve(events, 8);
+  const cohorts = cohortRetentionTable(events, 6, asOf);
 
   const eventNames = [...new Set(events.map((e) => e.eventName))].sort();
+
+  const { data: featureRows } = await supabase
+    .from("features")
+    .select("key, name")
+    .eq("org_id", org.orgId)
+    .order("created_at", { ascending: true });
+
+  const adoption = featureAdoption(events, featureRows ?? [], 30, asOf);
 
   return (
     <div className="flex flex-col gap-8">
@@ -75,6 +88,16 @@ export default async function DashboardPage({
         ) : (
           <FunnelBuilder events={events} eventNames={eventNames} />
         )}
+      </section>
+
+      <section>
+        <h2 className="mb-2 text-sm font-medium text-neutral-500">Cohort retention</h2>
+        <CohortHeatmap rows={cohorts} />
+      </section>
+
+      <section>
+        <h2 className="mb-2 text-sm font-medium text-neutral-500">Feature adoption</h2>
+        <FeatureAdoption slug={slug} results={adoption} />
       </section>
     </div>
   );

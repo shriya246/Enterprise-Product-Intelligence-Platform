@@ -149,3 +149,124 @@ export function funnelConversion(events: UsageEvent[], steps: string[]): FunnelS
 
   return results;
 }
+
+export interface CohortRow {
+  cohortWeekStart: string; // YYYY-MM-DD, Monday of the cohort's first-seen week
+  cohortSize: number;
+  retentionByWeek: (number | null)[]; // index = weeks since cohort start; null = not enough time has passed
+}
+
+function weekStart(date: Date): Date {
+  const d = new Date(date);
+  const day = d.getUTCDay();
+  const diff = (day + 6) % 7; // days since Monday
+  d.setUTCDate(d.getUTCDate() - diff);
+  d.setUTCHours(0, 0, 0, 0);
+  return d;
+}
+
+/**
+ * A cohort-by-week retention grid: each row is the group of users first seen
+ * in a given week, and each column is what fraction of that cohort was still
+ * active N weeks later. Unlike `weeklyRetentionCurve`, cohorts are kept
+ * separate rather than pooled, matching the classic cohort-table view.
+ */
+export function cohortRetentionTable(
+  events: UsageEvent[],
+  maxWeeks = 6,
+  asOf: Date = new Date()
+): CohortRow[] {
+  const firstSeen = new Map<string, Date>();
+  for (const event of events) {
+    const occurred = new Date(event.occurredAt);
+    const existing = firstSeen.get(event.distinctId);
+    if (!existing || occurred < existing) {
+      firstSeen.set(event.distinctId, occurred);
+    }
+  }
+
+  const cohortOf = new Map<string, string>(); // distinctId -> cohort week key
+  const cohortSizes = new Map<string, number>();
+  for (const [distinctId, first] of firstSeen) {
+    const key = weekStart(first).toISOString().slice(0, 10);
+    cohortOf.set(distinctId, key);
+    cohortSizes.set(key, (cohortSizes.get(key) ?? 0) + 1);
+  }
+
+  const activeWeeksByUser = new Map<string, Set<number>>();
+  for (const event of events) {
+    const cohortKey = cohortOf.get(event.distinctId);
+    if (!cohortKey) continue;
+    const cohortStartDate = new Date(`${cohortKey}T00:00:00.000Z`);
+    const weekOffset = Math.floor(daysBetween(cohortStartDate, new Date(event.occurredAt)) / 7);
+    if (!activeWeeksByUser.has(event.distinctId)) activeWeeksByUser.set(event.distinctId, new Set());
+    activeWeeksByUser.get(event.distinctId)!.add(weekOffset);
+  }
+
+  const cohortKeys = [...cohortSizes.keys()].sort();
+
+  return cohortKeys.map((cohortKey) => {
+    const cohortStartDate = new Date(`${cohortKey}T00:00:00.000Z`);
+    const size = cohortSizes.get(cohortKey)!;
+    const weeksElapsed = Math.floor(daysBetween(cohortStartDate, asOf) / 7);
+
+    const retentionByWeek: (number | null)[] = [];
+    for (let week = 0; week <= maxWeeks; week++) {
+      if (week > weeksElapsed) {
+        retentionByWeek.push(null);
+        continue;
+      }
+      let retained = 0;
+      for (const [distinctId, cKey] of cohortOf) {
+        if (cKey === cohortKey && activeWeeksByUser.get(distinctId)?.has(week)) {
+          retained += 1;
+        }
+      }
+      retentionByWeek.push(size === 0 ? 0 : Math.round((retained / size) * 1000) / 10);
+    }
+
+    return { cohortWeekStart: cohortKey, cohortSize: size, retentionByWeek };
+  });
+}
+
+export interface FeatureAdoptionInput {
+  key: string;
+  name: string;
+}
+
+export interface FeatureAdoptionResult {
+  key: string;
+  name: string;
+  adoptedUsers: number;
+  adoptionPct: number; // adoptedUsers / activeUsers in the same window
+}
+
+/** For each registered feature, what fraction of active users fired its event at least once in the window. */
+export function featureAdoption(
+  events: UsageEvent[],
+  features: FeatureAdoptionInput[],
+  windowDays: number,
+  asOf: Date
+): FeatureAdoptionResult[] {
+  const totalActive = activeUsers(events, windowDays, asOf);
+  const start = new Date(asOf);
+  start.setDate(start.getDate() - (windowDays - 1));
+  const startKey = dayKey(start.toISOString());
+  const endKey = dayKey(asOf.toISOString());
+
+  return features.map((feature) => {
+    const adopters = new Set<string>();
+    for (const event of events) {
+      const key = dayKey(event.occurredAt);
+      if (event.eventName === feature.key && key >= startKey && key <= endKey) {
+        adopters.add(event.distinctId);
+      }
+    }
+    return {
+      key: feature.key,
+      name: feature.name,
+      adoptedUsers: adopters.size,
+      adoptionPct: totalActive === 0 ? 0 : Math.round((adopters.size / totalActive) * 1000) / 10,
+    };
+  });
+}
