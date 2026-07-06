@@ -31,8 +31,8 @@ Living feature checklist. Items are tagged by the theme they originated from (Sp
 - [x] Roadmap module: create/prioritize items, dependencies, timeline view
 - [x] AI-recommended roadmap prioritization (engagement + feedback signals)
 - [x] AI PRD Generator: feature idea → user stories, acceptance criteria, success metrics, risks
-- [ ] Feature flags: create/toggle flags scoped to org
-- [ ] A/B experimentation: simple split + significance check (simple-statistics)
+- [x] Feature flags: create/toggle flags scoped to org
+- [x] A/B experimentation: simple split + significance check (simple-statistics)
 - [ ] Executive Dashboard: single-screen KPI rollup
 - [ ] Hardening: RLS policy audit doc, rate-limit audit, Sentry wiring, basic test coverage on core flows
 - [ ] PM docs: `GTM_STRATEGY.md`, `PRICING_STRATEGY.md`, `EXECUTIVE_SUMMARY.md` (final), `EXECUTIVE_PRESENTATION.md`
