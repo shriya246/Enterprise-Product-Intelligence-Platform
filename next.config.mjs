@@ -1,3 +1,5 @@
+import { withSentryConfig } from "@sentry/nextjs";
+
 /** @type {import('next').NextConfig} */
 const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
@@ -18,4 +20,10 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+// No-op (skips source map upload) until SENTRY_ORG/SENTRY_PROJECT/SENTRY_AUTH_TOKEN
+// are connected — client/server/edge error capture still works once
+// NEXT_PUBLIC_SENTRY_DSN is set, independent of source map upload.
+export default withSentryConfig(nextConfig, {
+  silent: true,
+  sourcemaps: { disable: true },
+});

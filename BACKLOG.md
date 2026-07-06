@@ -9,8 +9,8 @@ Living feature checklist. Items are tagged by the theme they originated from (Sp
 - [x] Supabase client wiring (browser + server) with env placeholders
 - [x] Auth: sign up, log in, log out, session handling
 - [x] Organizations: create org, RBAC (owner/admin/member) enforced via RLS
-- [ ] Org settings: invite/manage members, role changes
-- [ ] Audit log: writes on sensitive actions (member role changes, org settings)
+- [x] Org settings: invite/manage members, role changes
+- [x] Audit log: writes on sensitive actions (member role changes, org settings)
 - [x] Event ingestion: SDK snippet (`public/pulseai-sdk.js`) + `/api/events` route + Zod validation + rate limiting
 - [x] Analytics dashboard v1: DAU/WAU/MAU cards, retention curve, basic funnel builder
 - [ ] CI/CD: `vercel.json`, GitHub Actions workflow (lint + typecheck + build on push)
