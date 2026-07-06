@@ -317,6 +317,42 @@ export interface Database {
           }
         ];
       };
+      prd_drafts: {
+        Row: {
+          id: string;
+          org_id: string;
+          feature_idea: string;
+          title: string;
+          user_stories: string[];
+          acceptance_criteria: string[];
+          success_metrics: string[];
+          risks: string[];
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          org_id: string;
+          feature_idea: string;
+          title: string;
+          user_stories?: string[];
+          acceptance_criteria?: string[];
+          success_metrics?: string[];
+          risks?: string[];
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: never;
+        Relationships: [
+          {
+            foreignKeyName: "prd_drafts_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

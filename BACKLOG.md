@@ -28,8 +28,8 @@ Living feature checklist. Items are tagged by the theme they originated from (Sp
 
 ## Roadmap, PRD Generator, Experimentation, Executive Layer [Sprint 3]
 
-- [ ] Roadmap module: create/prioritize items, dependencies, timeline view
-- [ ] AI-recommended roadmap prioritization (engagement + feedback signals)
+- [x] Roadmap module: create/prioritize items, dependencies, timeline view
+- [x] AI-recommended roadmap prioritization (engagement + feedback signals)
 - [ ] AI PRD Generator: feature idea → user stories, acceptance criteria, success metrics, risks
 - [ ] Feature flags: create/toggle flags scoped to org
 - [ ] A/B experimentation: simple split + significance check (simple-statistics)
