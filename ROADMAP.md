@@ -15,15 +15,15 @@ Everything in `BACKLOG.md`, delivered as one continuous pass rather than staged 
 - Executive dashboard
 - CI/CD, security hardening pass, basic test coverage
 
-**Status:** in progress — see `BACKLOG.md` for the live checklist and `PROGRESS_LOG.md` (private) for build-by-build detail.
+**Status:** complete — every item above is built and pushed to `main`. See `BACKLOG.md` for the live checklist and `PROGRESS_LOG.md` (private) for build-by-build detail.
 
 **Known limitation at MVP:** no live external service is connected yet (Supabase/Groq/Upstash/Vercel/Sentry) — the codebase is fully wired against `.env.example` placeholders, ready to go live once real accounts are connected. This was a deliberate scoping decision for this pass, not a gap in the implementation.
 
 ## V1 (post-MVP)
 
 - Live service connection + first real deployment to Vercel
-- Real onboarding: invite teammates by email, not just by knowing the org slug
-- Org settings: member role management UI, org-level billing placeholder (still free-tier, just the settings surface)
+- Real email invitations — today an admin can only add someone who already has a PulseAI account (see `ARCHITECTURE.md`)
+- Org-level billing placeholder (still free-tier, just the settings surface)
 - Slack/email digest of weekly KPI summary
 - Saved/shareable dashboard views
 - CSV export of any chart or table for board decks

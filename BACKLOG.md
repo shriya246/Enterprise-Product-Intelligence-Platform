@@ -34,8 +34,8 @@ Living feature checklist. Items are tagged by the theme they originated from (Sp
 - [x] Feature flags: create/toggle flags scoped to org
 - [x] A/B experimentation: simple split + significance check (simple-statistics)
 - [x] Executive Dashboard: single-screen KPI rollup
-- [ ] Hardening: RLS policy audit doc, rate-limit audit, Sentry wiring, basic test coverage on core flows
-- [ ] PM docs: `GTM_STRATEGY.md`, `PRICING_STRATEGY.md`, `EXECUTIVE_SUMMARY.md` (final), `EXECUTIVE_PRESENTATION.md`
+- [x] Hardening: RLS policy audit doc, rate-limit audit, Sentry wiring, basic test coverage on core flows
+- [x] PM docs: `GTM_STRATEGY.md`, `PRICING_STRATEGY.md`, `EXECUTIVE_SUMMARY.md` (final), `EXECUTIVE_PRESENTATION.md`
 
 ## Deferred (explicitly out of scope for this pass)
 
