@@ -24,7 +24,7 @@ Living feature checklist. Items are tagged by the theme they originated from (Sp
 - [x] AI Chat Assistant v1: NL Q&A against org's own analytics + feedback data
 - [x] Cohort analysis view
 - [x] Feature adoption view
-- [ ] PM docs: `ARCHITECTURE.md` (full schema + API spec), `EXECUTIVE_SUMMARY.md` (v1)
+- [x] PM docs: `ARCHITECTURE.md` (full schema + API spec), `EXECUTIVE_SUMMARY.md` (v1)
 
 ## Roadmap, PRD Generator, Experimentation, Executive Layer [Sprint 3]
 

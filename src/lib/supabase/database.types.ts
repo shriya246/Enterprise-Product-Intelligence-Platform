@@ -2,6 +2,7 @@
 // us run `supabase gen types typescript` for the generated version.
 
 export type OrgRole = "owner" | "admin" | "member";
+export type RoadmapStatus = "backlog" | "planned" | "in_progress" | "shipped";
 
 export interface Database {
   public: {
@@ -225,6 +226,93 @@ export interface Database {
             columns: ["org_id"];
             isOneToOne: false;
             referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      roadmap_items: {
+        Row: {
+          id: string;
+          org_id: string;
+          title: string;
+          description: string | null;
+          status: RoadmapStatus;
+          target_quarter: string | null;
+          linked_feature_id: string | null;
+          priority_score: number | null;
+          priority_rationale: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          org_id: string;
+          title: string;
+          description?: string | null;
+          status?: RoadmapStatus;
+          target_quarter?: string | null;
+          linked_feature_id?: string | null;
+          priority_score?: number | null;
+          priority_rationale?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<{
+          title: string;
+          description: string | null;
+          status: RoadmapStatus;
+          target_quarter: string | null;
+          linked_feature_id: string | null;
+          priority_score: number | null;
+          priority_rationale: string | null;
+          updated_at: string;
+        }>;
+        Relationships: [
+          {
+            foreignKeyName: "roadmap_items_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "roadmap_items_linked_feature_id_fkey";
+            columns: ["linked_feature_id"];
+            isOneToOne: false;
+            referencedRelation: "features";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      roadmap_item_dependencies: {
+        Row: {
+          roadmap_item_id: string;
+          depends_on_item_id: string;
+          org_id: string;
+          created_at: string;
+        };
+        Insert: {
+          roadmap_item_id: string;
+          depends_on_item_id: string;
+          org_id: string;
+          created_at?: string;
+        };
+        Update: never;
+        Relationships: [
+          {
+            foreignKeyName: "roadmap_item_dependencies_roadmap_item_id_fkey";
+            columns: ["roadmap_item_id"];
+            isOneToOne: false;
+            referencedRelation: "roadmap_items";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "roadmap_item_dependencies_depends_on_item_id_fkey";
+            columns: ["depends_on_item_id"];
+            isOneToOne: false;
+            referencedRelation: "roadmap_items";
             referencedColumns: ["id"];
           }
         ];
