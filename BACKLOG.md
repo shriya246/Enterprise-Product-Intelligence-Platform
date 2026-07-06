@@ -30,7 +30,7 @@ Living feature checklist. Items are tagged by the theme they originated from (Sp
 
 - [x] Roadmap module: create/prioritize items, dependencies, timeline view
 - [x] AI-recommended roadmap prioritization (engagement + feedback signals)
-- [ ] AI PRD Generator: feature idea → user stories, acceptance criteria, success metrics, risks
+- [x] AI PRD Generator: feature idea → user stories, acceptance criteria, success metrics, risks
 - [ ] Feature flags: create/toggle flags scoped to org
 - [ ] A/B experimentation: simple split + significance check (simple-statistics)
 - [ ] Executive Dashboard: single-screen KPI rollup

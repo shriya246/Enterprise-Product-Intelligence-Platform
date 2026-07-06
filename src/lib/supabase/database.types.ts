@@ -353,6 +353,97 @@ export interface Database {
           }
         ];
       };
+      feature_flags: {
+        Row: {
+          id: string;
+          org_id: string;
+          key: string;
+          name: string;
+          description: string | null;
+          is_enabled: boolean;
+          rollout_pct: number;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          org_id: string;
+          key: string;
+          name: string;
+          description?: string | null;
+          is_enabled?: boolean;
+          rollout_pct?: number;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<{
+          name: string;
+          description: string | null;
+          is_enabled: boolean;
+          rollout_pct: number;
+        }>;
+        Relationships: [
+          {
+            foreignKeyName: "feature_flags_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      experiments: {
+        Row: {
+          id: string;
+          org_id: string;
+          name: string;
+          variant_a_name: string;
+          variant_b_name: string;
+          visitors_a: number;
+          conversions_a: number;
+          visitors_b: number;
+          conversions_b: number;
+          p_value: number | null;
+          is_significant: boolean | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          org_id: string;
+          name: string;
+          variant_a_name?: string;
+          variant_b_name?: string;
+          visitors_a?: number;
+          conversions_a?: number;
+          visitors_b?: number;
+          conversions_b?: number;
+          p_value?: number | null;
+          is_significant?: boolean | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<{
+          visitors_a: number;
+          conversions_a: number;
+          visitors_b: number;
+          conversions_b: number;
+          p_value: number | null;
+          is_significant: boolean | null;
+          updated_at: string;
+        }>;
+        Relationships: [
+          {
+            foreignKeyName: "experiments_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
