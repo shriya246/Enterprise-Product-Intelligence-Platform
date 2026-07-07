@@ -43,7 +43,7 @@ export async function createOrg(
 
   if (orgError || !org) {
     return {
-      error: `[DEBUG] ${orgError?.message ?? "Could not create organization"} | user.id=${user.id} | getUserError=${getUserError?.message ?? "none"} | sessionPresent=${Boolean(session)} | accessTokenPrefix=${session?.access_token?.slice(0, 24) ?? "none"} | role=${session?.user?.role ?? "none"}`,
+      error: `[DEBUG] msg=${orgError?.message} | code=${orgError?.code} | details=${orgError?.details} | hint=${orgError?.hint} | user.id=${user.id} | sessionPresent=${Boolean(session)} | role=${session?.user?.role ?? "none"} | aud=${session?.user?.aud ?? "none"}`,
     };
   }
 
