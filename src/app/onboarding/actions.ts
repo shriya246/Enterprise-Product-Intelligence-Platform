@@ -24,7 +24,12 @@ export async function createOrg(
   const supabase = await createClient();
   const {
     data: { user },
+    error: getUserError,
   } = await supabase.auth.getUser();
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
   if (!user) {
     redirect("/login");
@@ -37,7 +42,9 @@ export async function createOrg(
     .single();
 
   if (orgError || !org) {
-    return { error: orgError?.message ?? "Could not create organization" };
+    return {
+      error: `[DEBUG] ${orgError?.message ?? "Could not create organization"} | user.id=${user.id} | getUserError=${getUserError?.message ?? "none"} | sessionPresent=${Boolean(session)} | accessTokenPrefix=${session?.access_token?.slice(0, 24) ?? "none"} | role=${session?.user?.role ?? "none"}`,
+    };
   }
 
   const { error: memberError } = await supabase
