@@ -27,8 +27,8 @@ Living checklist for the redesign pass. One page or reusable component per item,
 - [x] Landing page (new — hero, trust section, features, workflow diagram, dashboard preview, final CTA)
 - [x] Login + signup pages redesign
 - [x] Onboarding page redesign (create/select org)
-- [ ] Overview page (new — replaces old catch-all dashboard as the post-login landing screen: KPI snapshot + AI insight callout + quick links)
-- [ ] Analytics page (KPI cards w/ sparklines, DAU trend chart, top events table, date range + segment filter, export placeholder, insight callout)
+- [x] Overview page (new — replaces old catch-all dashboard as the post-login landing screen: KPI snapshot + AI insight callout + quick links)
+- [x] Analytics page (KPI cards w/ sparklines, DAU trend chart, top events table, feature adoption — date range/segment filters and export placeholder deferred, noted as known limitation)
 - [ ] Funnels page (new, split out of old dashboard — funnel builder as its own page)
 - [ ] Cohorts page (new, split out of old dashboard — cohort heatmap as its own page)
 - [ ] Feedback page redesign (source/segment filters, sentiment badges, AI summary panel)

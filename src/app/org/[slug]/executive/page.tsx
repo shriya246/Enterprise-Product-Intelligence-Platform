@@ -1,7 +1,7 @@
 import { requireOrgMembership } from "@/lib/org";
 import { createClient } from "@/lib/supabase/server";
 import { getOrgAnalyticsData } from "@/lib/get-org-analytics";
-import { StatTiles } from "@/components/charts/analytics-charts";
+import { MetricCard } from "@/components/ui/metric-card";
 
 const STATUS_COLORS = {
   good: "#0ca30c",
@@ -46,7 +46,11 @@ export default async function ExecutivePage({
         </p>
       </div>
 
-      <StatTiles dau={data.dau} wau={data.wau} mau={data.mau} />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <MetricCard label="Daily active users" value={data.dau} delay={0} />
+        <MetricCard label="Weekly active users" value={data.wau} delay={0.05} />
+        <MetricCard label="Monthly active users" value={data.mau} delay={0.1} />
+      </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
