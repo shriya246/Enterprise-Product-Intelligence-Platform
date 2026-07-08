@@ -1,7 +1,14 @@
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { requireOrgMembership } from "@/lib/org";
 import { createClient } from "@/lib/supabase/server";
 import { AddFeedbackForm, ImportCsvForm } from "./feedback-forms";
 import { ClusterButton } from "./cluster-button";
+import { FeedbackList } from "./feedback-list";
+import { PageHeader } from "@/components/ui/page-header";
+import { AnimatedCard } from "@/components/ui/animated-card";
+import { InsightCard } from "@/components/ui/insight-card";
+import { SectionHeader } from "@/components/ui/section-header";
 
 export default async function FeedbackPage({
   params,
@@ -19,65 +26,66 @@ export default async function FeedbackPage({
     .order("created_at", { ascending: false })
     .limit(200);
 
+  const list = items ?? [];
+  const sentimentCounts = { positive: 0, neutral: 0, negative: 0 };
+  const themeCounts = new Map<string, number>();
+  for (const item of list) {
+    if (item.sentiment === "positive") sentimentCounts.positive += 1;
+    else if (item.sentiment === "neutral") sentimentCounts.neutral += 1;
+    else if (item.sentiment === "negative") sentimentCounts.negative += 1;
+    if (item.theme) themeCounts.set(item.theme, (themeCounts.get(item.theme) ?? 0) + 1);
+  }
+  const taggedCount = sentimentCounts.positive + sentimentCounts.neutral + sentimentCounts.negative;
+  const topTheme = [...themeCounts.entries()].sort((a, b) => b[1] - a[1])[0];
+
   return (
     <div className="flex flex-col gap-8">
-      <div>
-        <h1 className="text-xl font-semibold">Feedback</h1>
-        <p className="text-sm text-neutral-500">
-          Manual entries and CSV imports land here, then get clustered into themes with
-          sentiment by the AI layer.
-        </p>
-      </div>
+      <PageHeader
+        title="Feedback"
+        description="Manual entries and CSV imports land here, then get clustered into themes with sentiment by the AI layer."
+      />
+
+      {taggedCount > 0 && (
+        <InsightCard
+          title="Feedback summary"
+          action={
+            <Link
+              href={`/org/${slug}/feedback/themes`}
+              className="inline-flex items-center gap-1 text-xs font-medium text-brand hover:underline"
+            >
+              View themes
+              <ArrowUpRight className="h-3 w-3" />
+            </Link>
+          }
+        >
+          {taggedCount} of {list.length} items tagged — {sentimentCounts.positive} positive,{" "}
+          {sentimentCounts.neutral} neutral, {sentimentCounts.negative} negative.
+          {topTheme && ` Top theme: "${topTheme[0]}" (${topTheme[1]} mentions).`}
+        </InsightCard>
+      )}
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <section className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
-          <h2 className="mb-3 text-sm font-medium text-neutral-500">Add feedback manually</h2>
+        <AnimatedCard hover={false}>
+          <h2 className="mb-3 text-sm font-semibold text-text-primary">Add feedback manually</h2>
           <AddFeedbackForm slug={slug} />
-        </section>
+        </AnimatedCard>
 
-        <section className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
-          <h2 className="mb-3 text-sm font-medium text-neutral-500">Import from CSV</h2>
-          <p className="mb-3 text-xs text-neutral-500">
+        <AnimatedCard hover={false} delay={0.05}>
+          <h2 className="mb-3 text-sm font-semibold text-text-primary">Import from CSV</h2>
+          <p className="mb-3 text-xs text-text-muted">
             Expects a header row with a <code>body</code> column (or <code>feedback</code>/
             <code>text</code>) and an optional <code>author</code> column.
           </p>
           <ImportCsvForm slug={slug} />
-        </section>
+        </AnimatedCard>
       </div>
 
       <section>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-medium text-neutral-500">
-            {items?.length ?? 0} feedback item(s)
-          </h2>
-          <ClusterButton orgId={org.orgId} />
-        </div>
-        <ul className="flex flex-col gap-3">
-          {(items ?? []).map((item) => (
-            <li
-              key={item.id}
-              className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800"
-            >
-              <p className="text-sm">{item.body}</p>
-              <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-neutral-500">
-                {item.author && <span>{item.author}</span>}
-                <span className="rounded-full border border-neutral-300 px-2 py-0.5 dark:border-neutral-700">
-                  {item.source}
-                </span>
-                {item.sentiment && (
-                  <span className="rounded-full border border-neutral-300 px-2 py-0.5 dark:border-neutral-700">
-                    {item.sentiment}
-                  </span>
-                )}
-                {item.theme && (
-                  <span className="rounded-full border border-neutral-300 px-2 py-0.5 dark:border-neutral-700">
-                    {item.theme}
-                  </span>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
+        <SectionHeader
+          title={`${list.length} feedback item(s)`}
+          action={<ClusterButton orgId={org.orgId} />}
+        />
+        <FeedbackList items={list} />
       </section>
     </div>
   );

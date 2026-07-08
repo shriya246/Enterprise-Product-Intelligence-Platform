@@ -3,10 +3,14 @@
 import { useFormState } from "react-dom";
 import { useState } from "react";
 import Papa from "papaparse";
+import { UploadCloud } from "lucide-react";
 import { addFeedback, importFeedback, type FeedbackFormState } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
 
 const initialState: FeedbackFormState = {};
+
+const inputClass =
+  "rounded-lg border border-border bg-surface px-3.5 py-2.5 text-sm text-text-primary outline-none transition-colors placeholder:text-text-muted focus:border-brand";
 
 export function AddFeedbackForm({ slug }: { slug: string }) {
   const boundAction = addFeedback.bind(null, slug);
@@ -19,20 +23,15 @@ export function AddFeedbackForm({ slug }: { slug: string }) {
         required
         rows={3}
         placeholder="Paste a piece of customer feedback..."
-        className="rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+        className={inputClass}
       />
-      <input
-        name="author"
-        type="text"
-        placeholder="Author (optional)"
-        className="rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
-      />
+      <input name="author" type="text" placeholder="Author (optional)" className={inputClass} />
       {state.error && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-status-critical">
           {state.error}
         </p>
       )}
-      {state.success && <p className="text-sm text-green-600">Added.</p>}
+      {state.success && <p className="text-sm text-status-good">Added.</p>}
       <SubmitButton pendingText="Adding...">Add feedback</SubmitButton>
     </form>
   );
@@ -74,28 +73,32 @@ export function ImportCsvForm({ slug }: { slug: string }) {
 
   return (
     <form action={formAction} className="flex flex-col gap-3">
-      <input
-        type="file"
-        accept=".csv,text/csv"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) handleFile(file);
-        }}
-        className="text-sm"
-      />
+      <label className="flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-dashed border-border px-4 py-6 text-center transition-colors hover:border-brand/40 hover:bg-brand-subtle">
+        <UploadCloud className="h-5 w-5 text-text-muted" />
+        <span className="text-sm text-text-secondary">Click to choose a CSV file</span>
+        <input
+          type="file"
+          accept=".csv,text/csv"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) handleFile(file);
+          }}
+          className="hidden"
+        />
+      </label>
       <input type="hidden" name="rows" value={rowsJson} />
 
-      {parseError && <p className="text-sm text-red-600">{parseError}</p>}
+      {parseError && <p className="text-sm text-status-critical">{parseError}</p>}
       {parsedCount !== null && !parseError && (
-        <p className="text-sm text-neutral-500">Parsed {parsedCount} row(s), ready to import.</p>
+        <p className="text-sm text-text-muted">Parsed {parsedCount} row(s), ready to import.</p>
       )}
       {state.error && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-status-critical">
           {state.error}
         </p>
       )}
       {state.success && (
-        <p className="text-sm text-green-600">Imported {state.importedCount} row(s).</p>
+        <p className="text-sm text-status-good">Imported {state.importedCount} row(s).</p>
       )}
 
       <SubmitButton pendingText="Importing...">Import CSV</SubmitButton>
