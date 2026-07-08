@@ -1,7 +1,11 @@
 import { requireOrgMembership } from "@/lib/org";
 import { createClient } from "@/lib/supabase/server";
 import { getOrgAnalyticsData } from "@/lib/get-org-analytics";
-import { StatTiles, DailyActiveUsersChart, RetentionChart } from "@/components/charts/analytics-charts";
+import { DailyActiveUsersChart, RetentionChart } from "@/components/charts/analytics-charts";
+import { PageHeader } from "@/components/ui/page-header";
+import { SectionHeader } from "@/components/ui/section-header";
+import { MetricCard } from "@/components/ui/metric-card";
+import { ChartCard } from "@/components/ui/chart-card";
 import { FeatureAdoption } from "./feature-adoption";
 
 export default async function AnalyticsPage({
@@ -13,56 +17,59 @@ export default async function AnalyticsPage({
   const org = await requireOrgMembership(slug);
   const supabase = await createClient();
   const data = await getOrgAnalyticsData(supabase, org.orgId);
+  const sparkline = data.dailySeries.map((p) => p.activeUsers);
 
   return (
     <div className="flex flex-col gap-8">
-      <div>
-        <h1 className="text-xl font-semibold">Analytics</h1>
-        <p className="text-sm text-neutral-500">
-          Last {data.lookbackDays} days · {data.events.length.toLocaleString()} events
-        </p>
+      <PageHeader
+        title="Analytics"
+        description={`Last ${data.lookbackDays} days · ${data.events.length.toLocaleString()} events`}
+      />
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <MetricCard label="Daily active users" value={data.dau} sparkline={sparkline} delay={0} />
+        <MetricCard label="Weekly active users" value={data.wau} sparkline={sparkline} delay={0.05} />
+        <MetricCard label="Monthly active users" value={data.mau} sparkline={sparkline} delay={0.1} />
       </div>
 
-      <StatTiles dau={data.dau} wau={data.wau} mau={data.mau} />
-
-      <section>
-        <h2 className="mb-2 text-sm font-medium text-neutral-500">Daily active users</h2>
+      <ChartCard title="Daily active users" delay={0.1}>
         <DailyActiveUsersChart data={data.dailySeries} />
-      </section>
+      </ChartCard>
 
-      <section>
-        <h2 className="mb-2 text-sm font-medium text-neutral-500">Weekly retention</h2>
+      <ChartCard title="Weekly retention" subtitle="Pooled cohort curve" delay={0.15}>
         <RetentionChart data={data.retention} />
-      </section>
+      </ChartCard>
 
       <section>
-        <h2 className="mb-2 text-sm font-medium text-neutral-500">Top events</h2>
+        <SectionHeader title="Top events" />
         {data.topEvents.length === 0 ? (
-          <p className="text-sm text-neutral-500">No events yet.</p>
+          <p className="text-sm text-text-muted">No events yet.</p>
         ) : (
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-neutral-200 text-left text-xs text-neutral-500 dark:border-neutral-800">
-                <th className="py-2 font-medium">Event</th>
-                <th className="py-2 font-medium">Count</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.topEvents.map((e) => (
-                <tr key={e.name} className="border-b border-neutral-100 dark:border-neutral-900">
-                  <td className="py-2">{e.name}</td>
-                  <td className="py-2 [font-variant-numeric:tabular-nums]">
-                    {e.count.toLocaleString()}
-                  </td>
+          <div className="overflow-hidden rounded-xl border border-border">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-surface text-left text-xs text-text-muted">
+                  <th className="px-4 py-2.5 font-medium">Event</th>
+                  <th className="px-4 py-2.5 font-medium">Count</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {data.topEvents.map((e) => (
+                  <tr key={e.name} className="border-b border-border last:border-0">
+                    <td className="px-4 py-2.5">{e.name}</td>
+                    <td className="px-4 py-2.5 [font-variant-numeric:tabular-nums]">
+                      {e.count.toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </section>
 
       <section>
-        <h2 className="mb-2 text-sm font-medium text-neutral-500">Feature adoption</h2>
+        <SectionHeader title="Feature adoption" />
         <FeatureAdoption slug={slug} results={data.adoption} />
       </section>
     </div>
