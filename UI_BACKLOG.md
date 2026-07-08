@@ -18,13 +18,13 @@ Living checklist for the redesign pass. One page or reusable component per item,
 
 - [x] Design system setup: Tailwind theme tokens (color scale, radii, shadows), Inter font via `next/font/google`, install `framer-motion` + `lucide-react`, refresh `globals.css`
 - [x] Reusable components: `AppShell`, `Sidebar` (with active-indicator animation + mobile drawer), `TopNav` (org switcher, command search, notifications, user menu) — also required splitting the old merged dashboard into Overview/Analytics/Funnels/Cohorts routes to match the sidebar IA
-- [ ] Reusable components: `MetricCard`, `ChartCard`, `InsightCard`, `AnimatedCard`
-- [ ] Reusable components: `StatusBadge`, `PriorityBadge`, `EmptyState`, `LoadingSkeleton`, `PageHeader`, `SectionHeader`
-- [ ] Reusable components: `CommandSearch`, `AIMessage`, `PromptChip`, `ExecutiveSummaryCard`
+- [x] Reusable components: `MetricCard`, `ChartCard`, `InsightCard`, `AnimatedCard`
+- [x] Reusable components: `StatusBadge`, `PriorityBadge`, `EmptyState`, `LoadingSkeleton`, `PageHeader`, `SectionHeader`
+- [x] Reusable components: `CommandSearch` (shipped with TopNav), `AIMessage`, `PromptChip`, `ExecutiveSummaryCard`
 
 ## Pages
 
-- [ ] Landing page (new — hero, trust section, features, workflow diagram, dashboard preview, final CTA)
+- [x] Landing page (new — hero, trust section, features, workflow diagram, dashboard preview, final CTA)
 - [ ] Login + signup pages redesign
 - [ ] Onboarding page redesign (create/select org)
 - [ ] Overview page (new — replaces old catch-all dashboard as the post-login landing screen: KPI snapshot + AI insight callout + quick links)
