@@ -32,7 +32,7 @@ Living checklist for the redesign pass. One page or reusable component per item,
 - [x] Funnels page (new, split out of old dashboard — funnel builder as its own page)
 - [x] Cohorts page (new, split out of old dashboard — cohort heatmap as its own page)
 - [x] Feedback page redesign (source/sentiment filters, sentiment badges, AI summary panel — customer segment filter deferred, no segment data model exists yet)
-- [ ] Feedback themes page (new — theme cards, clusters, severity indicator, detail drawer)
+- [x] Feedback themes page (new — theme cards, clusters, severity indicator, detail drawer)
 - [ ] AI Assistant page redesign (message bubbles, prompt chips, evidence cards, confidence badge, streaming effect, empty state)
 - [ ] Roadmap page redesign (kanban + status/priority badges, AI recommendation card, dependency indicator, detail modal)
 - [ ] PRD Generator page redesign (persona/business-goal inputs, related feedback selector, PRD preview, copy-Markdown, quality checklist)
