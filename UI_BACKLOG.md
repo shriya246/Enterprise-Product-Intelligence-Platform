@@ -25,7 +25,7 @@ Living checklist for the redesign pass. One page or reusable component per item,
 ## Pages
 
 - [x] Landing page (new — hero, trust section, features, workflow diagram, dashboard preview, final CTA)
-- [ ] Login + signup pages redesign
+- [x] Login + signup pages redesign
 - [ ] Onboarding page redesign (create/select org)
 - [ ] Overview page (new — replaces old catch-all dashboard as the post-login landing screen: KPI snapshot + AI insight callout + quick links)
 - [ ] Analytics page (KPI cards w/ sparklines, DAU trend chart, top events table, date range + segment filter, export placeholder, insight callout)
