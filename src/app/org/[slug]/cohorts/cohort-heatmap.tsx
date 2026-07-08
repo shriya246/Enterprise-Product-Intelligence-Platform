@@ -17,14 +17,6 @@ function cellStyle(pct: number | null) {
 }
 
 export function CohortHeatmap({ rows }: { rows: CohortRow[] }) {
-  if (rows.length === 0) {
-    return (
-      <p className="text-sm text-neutral-500">
-        No cohorts yet — cohorts appear once users start generating events.
-      </p>
-    );
-  }
-
   const maxWeeks = rows[0].retentionByWeek.length - 1;
   const recentRows = rows.slice(-8).reverse();
 
@@ -33,10 +25,10 @@ export function CohortHeatmap({ rows }: { rows: CohortRow[] }) {
       <table className="min-w-full border-separate border-spacing-1 text-xs">
         <thead>
           <tr>
-            <th className="px-2 py-1 text-left font-medium text-neutral-500">Cohort week</th>
-            <th className="px-2 py-1 text-left font-medium text-neutral-500">Size</th>
+            <th className="px-2 py-1 text-left font-medium text-text-muted">Cohort week</th>
+            <th className="px-2 py-1 text-left font-medium text-text-muted">Size</th>
             {Array.from({ length: maxWeeks + 1 }, (_, week) => (
-              <th key={week} className="px-2 py-1 text-center font-medium text-neutral-500">
+              <th key={week} className="px-2 py-1 text-center font-medium text-text-muted">
                 Wk {week}
               </th>
             ))}
@@ -45,8 +37,8 @@ export function CohortHeatmap({ rows }: { rows: CohortRow[] }) {
         <tbody>
           {recentRows.map((row) => (
             <tr key={row.cohortWeekStart}>
-              <td className="px-2 py-1 text-neutral-500">{row.cohortWeekStart}</td>
-              <td className="px-2 py-1 text-neutral-500">{row.cohortSize}</td>
+              <td className="px-2 py-1 text-text-muted">{row.cohortWeekStart}</td>
+              <td className="px-2 py-1 text-text-muted">{row.cohortSize}</td>
               {row.retentionByWeek.map((pct, week) => (
                 <td
                   key={week}

@@ -30,7 +30,7 @@ Living checklist for the redesign pass. One page or reusable component per item,
 - [x] Overview page (new — replaces old catch-all dashboard as the post-login landing screen: KPI snapshot + AI insight callout + quick links)
 - [x] Analytics page (KPI cards w/ sparklines, DAU trend chart, top events table, feature adoption — date range/segment filters and export placeholder deferred, noted as known limitation)
 - [x] Funnels page (new, split out of old dashboard — funnel builder as its own page)
-- [ ] Cohorts page (new, split out of old dashboard — cohort heatmap as its own page)
+- [x] Cohorts page (new, split out of old dashboard — cohort heatmap as its own page)
 - [ ] Feedback page redesign (source/segment filters, sentiment badges, AI summary panel)
 - [ ] Feedback themes page (new — theme cards, clusters, severity indicator, detail drawer)
 - [ ] AI Assistant page redesign (message bubbles, prompt chips, evidence cards, confidence badge, streaming effect, empty state)
