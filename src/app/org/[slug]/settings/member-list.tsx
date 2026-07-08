@@ -3,6 +3,7 @@
 import { useTransition } from "react";
 import { changeRole, removeMember } from "./actions";
 import type { OrgRole } from "@/lib/supabase/database.types";
+import { StatusBadge, type StatusTone } from "@/components/ui/status-badge";
 
 export interface Member {
   userId: string;
@@ -12,6 +13,11 @@ export interface Member {
 }
 
 const ROLES: OrgRole[] = ["owner", "admin", "member"];
+const ROLE_TONE: Record<OrgRole, StatusTone> = {
+  owner: "brand",
+  admin: "good",
+  member: "neutral",
+};
 
 export function MemberList({
   slug,
@@ -31,13 +37,19 @@ export function MemberList({
         return (
           <li
             key={member.userId}
-            className="flex items-center justify-between rounded-lg border border-neutral-200 p-3 text-sm dark:border-neutral-800"
+            className="flex items-center justify-between rounded-xl border border-border bg-surface p-3 text-sm"
           >
-            <div>
-              <p className="font-medium">{member.fullName ?? member.email}</p>
-              <p className="text-xs text-neutral-500">{member.email}</p>
+            <div className="flex items-center gap-3">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-subtle text-xs font-semibold text-brand">
+                {(member.fullName ?? member.email).slice(0, 1).toUpperCase()}
+              </span>
+              <div>
+                <p className="font-medium text-text-primary">{member.fullName ?? member.email}</p>
+                <p className="text-xs text-text-muted">{member.email}</p>
+              </div>
             </div>
             <div className="flex items-center gap-2">
+              <StatusBadge label={member.role} tone={ROLE_TONE[member.role]} className="capitalize" />
               <select
                 defaultValue={member.role}
                 disabled={isSelf || pending}
@@ -49,7 +61,7 @@ export function MemberList({
                     changeRole(slug, formData);
                   });
                 }}
-                className="rounded-md border border-neutral-300 bg-transparent px-2 py-1 text-xs dark:border-neutral-700"
+                className="rounded-md border border-border bg-surface px-2 py-1 text-xs text-text-secondary outline-none focus:border-brand"
               >
                 {ROLES.map((r) => (
                   <option key={r} value={r}>
@@ -67,7 +79,7 @@ export function MemberList({
                     removeMember(slug, formData);
                   });
                 }}
-                className="rounded-md border border-neutral-300 px-2 py-1 text-xs text-red-600 disabled:opacity-40 dark:border-neutral-700"
+                className="rounded-md border border-border px-2 py-1 text-xs text-status-critical disabled:opacity-40"
               >
                 Remove
               </button>
