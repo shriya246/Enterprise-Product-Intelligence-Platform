@@ -4,16 +4,28 @@ import { activeUsers, weeklyRetentionCurve, type UsageEvent } from "@/lib/analyt
 
 const LOOKBACK_DAYS = 90;
 
+export interface Evidence {
+  label: string;
+  value: string;
+}
+
+export interface OrgContext {
+  contextText: string;
+  evidence: Evidence[];
+}
+
 /**
  * Summarizes an org's own analytics + feedback into a compact text block the
  * AI assistant can ground its answer in, so questions like "why is retention
  * dropping" are answered from the org's real numbers rather than a generic
- * response.
+ * response. Also returns the same headline numbers as structured evidence,
+ * for the UI to display alongside the answer — not a separate AI call, just
+ * the same figures already computed for the prompt.
  */
 export async function buildOrgContext(
   supabase: SupabaseClient<Database>,
   orgId: string
-): Promise<string> {
+): Promise<OrgContext> {
   const since = new Date();
   since.setDate(since.getDate() - LOOKBACK_DAYS);
 
@@ -63,7 +75,7 @@ export async function buildOrgContext(
     .map((p) => `week ${p.weeksSinceFirstSeen}: ${p.retentionPct}%`)
     .join(", ");
 
-  return [
+  const contextText = [
     `Usage over the last ${LOOKBACK_DAYS} days (${events.length} events):`,
     `- Daily active users: ${dau}`,
     `- Weekly active users: ${wau}`,
@@ -74,4 +86,18 @@ export async function buildOrgContext(
     `- Sentiment breakdown: ${sentimentSummary}`,
     `- Top themes: ${topThemes}`,
   ].join("\n");
+
+  const latestRetention = retention[retention.length - 1];
+
+  const evidence: Evidence[] = [
+    { label: "Daily active users", value: String(dau) },
+    { label: "Weekly active users", value: String(wau) },
+    { label: "Monthly active users", value: String(mau) },
+    ...(latestRetention
+      ? [{ label: `Wk ${latestRetention.weeksSinceFirstSeen} retention`, value: `${latestRetention.retentionPct}%` }]
+      : []),
+    { label: "Feedback items", value: String(feedbackRows?.length ?? 0) },
+  ];
+
+  return { contextText, evidence };
 }

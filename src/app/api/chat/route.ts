@@ -51,7 +51,7 @@ export async function POST(request: Request) {
   }
 
   const context = await buildOrgContext(supabase, orgId);
-  const answer = await answerQuestion(question, context);
+  const answer = await answerQuestion(question, context.contextText);
 
-  return NextResponse.json({ answer });
+  return NextResponse.json({ answer, evidence: context.evidence });
 }
