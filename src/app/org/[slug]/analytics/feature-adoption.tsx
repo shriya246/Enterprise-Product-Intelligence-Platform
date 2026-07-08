@@ -27,7 +27,7 @@ export function FeatureAdoption({
     <div className="flex flex-col gap-4">
       {results.length === 0 ? (
         <EmptyState
-          icon={PackagePlus}
+          icon={<PackagePlus className="h-5 w-5" />}
           title="No features registered yet"
           description="Add one below to start tracking adoption against your event stream."
         />

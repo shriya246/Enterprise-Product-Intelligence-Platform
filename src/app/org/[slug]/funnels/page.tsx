@@ -26,7 +26,7 @@ export default async function FunnelsPage({
 
       {data.eventNames.length === 0 ? (
         <EmptyState
-          icon={Filter}
+          icon={<Filter className="h-5 w-5" />}
           title="No events yet"
           description="Send some with the tracking snippet to see a funnel here."
         />

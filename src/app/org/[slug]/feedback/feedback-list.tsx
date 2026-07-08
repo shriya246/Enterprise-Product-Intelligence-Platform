@@ -77,7 +77,7 @@ export function FeedbackList({ items }: { items: FeedbackItem[] }) {
 
       {filtered.length === 0 ? (
         <EmptyState
-          icon={MessageSquare}
+          icon={<MessageSquare className="h-5 w-5" />}
           title="No feedback matches these filters"
           description="Try a different source or sentiment, or add new feedback above."
         />

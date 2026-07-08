@@ -26,7 +26,7 @@ export default async function CohortsPage({
 
       {data.cohorts.length === 0 ? (
         <EmptyState
-          icon={Grid3x3}
+          icon={<Grid3x3 className="h-5 w-5" />}
           title="No cohorts yet"
           description="Cohorts appear once users start generating events."
         />

@@ -74,7 +74,7 @@ export default async function FeedbackThemesPage({
 
       {clusters.length === 0 ? (
         <EmptyState
-          icon={Layers}
+          icon={<Layers className="h-5 w-5" />}
           title="No themes yet"
           description="Run AI clustering from the Feedback page once you have some feedback items."
         />
