@@ -1,10 +1,17 @@
 "use client";
 
 import { useFormState } from "react-dom";
+import { FlaskConical } from "lucide-react";
 import { createExperiment, updateExperimentCounts, type ExperimentFormState } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { AnimatedCard } from "@/components/ui/animated-card";
+import { StatusBadge } from "@/components/ui/status-badge";
 
 const initialState: ExperimentFormState = {};
+
+const inputClass =
+  "rounded-lg border border-border bg-surface px-2.5 py-1.5 text-sm text-text-primary outline-none focus:border-brand";
 
 interface Experiment {
   id: string;
@@ -19,65 +26,78 @@ interface Experiment {
   is_significant: boolean | null;
 }
 
+function rate(conversions: number, visitors: number): number {
+  return visitors === 0 ? 0 : Math.round((conversions / visitors) * 1000) / 10;
+}
+
 function ExperimentCard({ slug, experiment }: { slug: string; experiment: Experiment }) {
   const boundAction = updateExperimentCounts.bind(null, slug);
   const [state, formAction] = useFormState(boundAction, initialState);
 
-  return (
-    <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
-      <p className="font-medium">{experiment.name}</p>
+  const rateA = rate(experiment.conversions_a, experiment.visitors_a);
+  const rateB = rate(experiment.conversions_b, experiment.visitors_b);
+  const hasResults = experiment.p_value !== null;
 
-      <form action={formAction} className="mt-3 grid grid-cols-2 gap-4">
+  return (
+    <AnimatedCard hover={false}>
+      <div className="flex items-center justify-between">
+        <p className="text-sm font-semibold text-text-primary">{experiment.name}</p>
+        {hasResults && (
+          <StatusBadge
+            label={experiment.is_significant ? "Significant" : "Not significant yet"}
+            tone={experiment.is_significant ? "good" : "neutral"}
+          />
+        )}
+      </div>
+
+      {hasResults && (
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          <div className="rounded-lg border border-border p-3">
+            <p className="text-xs text-text-muted">{experiment.variant_a_name}</p>
+            <p className="text-xl font-semibold text-text-primary">{rateA}%</p>
+          </div>
+          <div className="rounded-lg border border-border p-3">
+            <p className="text-xs text-text-muted">{experiment.variant_b_name}</p>
+            <p className="text-xl font-semibold text-text-primary">
+              {rateB}%
+              {rateB !== rateA && (
+                <span className={`ml-1.5 text-xs font-medium ${rateB > rateA ? "text-status-good" : "text-status-critical"}`}>
+                  {rateB > rateA ? "+" : ""}
+                  {Math.round((rateB - rateA) * 10) / 10}pt
+                </span>
+              )}
+            </p>
+          </div>
+        </div>
+      )}
+
+      <form action={formAction} className="mt-4 grid grid-cols-2 gap-4">
         <input type="hidden" name="experimentId" value={experiment.id} />
         <fieldset className="flex flex-col gap-2">
-          <legend className="text-xs font-semibold text-neutral-500">
+          <legend className="text-xs font-semibold text-text-muted">
             Variant {experiment.variant_a_name}
           </legend>
-          <label className="flex flex-col gap-1 text-xs text-neutral-500">
+          <label className="flex flex-col gap-1 text-xs text-text-muted">
             Visitors
-            <input
-              name="visitorsA"
-              type="number"
-              min={0}
-              defaultValue={experiment.visitors_a}
-              className="rounded-md border border-neutral-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-900"
-            />
+            <input name="visitorsA" type="number" min={0} defaultValue={experiment.visitors_a} className={inputClass} />
           </label>
-          <label className="flex flex-col gap-1 text-xs text-neutral-500">
+          <label className="flex flex-col gap-1 text-xs text-text-muted">
             Conversions
-            <input
-              name="conversionsA"
-              type="number"
-              min={0}
-              defaultValue={experiment.conversions_a}
-              className="rounded-md border border-neutral-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-900"
-            />
+            <input name="conversionsA" type="number" min={0} defaultValue={experiment.conversions_a} className={inputClass} />
           </label>
         </fieldset>
 
         <fieldset className="flex flex-col gap-2">
-          <legend className="text-xs font-semibold text-neutral-500">
+          <legend className="text-xs font-semibold text-text-muted">
             Variant {experiment.variant_b_name}
           </legend>
-          <label className="flex flex-col gap-1 text-xs text-neutral-500">
+          <label className="flex flex-col gap-1 text-xs text-text-muted">
             Visitors
-            <input
-              name="visitorsB"
-              type="number"
-              min={0}
-              defaultValue={experiment.visitors_b}
-              className="rounded-md border border-neutral-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-900"
-            />
+            <input name="visitorsB" type="number" min={0} defaultValue={experiment.visitors_b} className={inputClass} />
           </label>
-          <label className="flex flex-col gap-1 text-xs text-neutral-500">
+          <label className="flex flex-col gap-1 text-xs text-text-muted">
             Conversions
-            <input
-              name="conversionsB"
-              type="number"
-              min={0}
-              defaultValue={experiment.conversions_b}
-              className="rounded-md border border-neutral-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-900"
-            />
+            <input name="conversionsB" type="number" min={0} defaultValue={experiment.conversions_b} className={inputClass} />
           </label>
         </fieldset>
 
@@ -86,24 +106,19 @@ function ExperimentCard({ slug, experiment }: { slug: string; experiment: Experi
         </div>
       </form>
 
-      {state.error && <p className="mt-2 text-sm text-red-600">{state.error}</p>}
+      {state.error && <p className="mt-2 text-sm text-status-critical">{state.error}</p>}
 
-      {experiment.p_value !== null && (
-        <div className="mt-3 rounded-md border border-neutral-200 p-3 text-sm dark:border-neutral-800">
-          <p>
-            p-value: <span className="[font-variant-numeric:tabular-nums]">{experiment.p_value}</span>
-          </p>
-          <p
-            className="mt-1 font-medium"
-            style={{ color: experiment.is_significant ? "#0ca30c" : "#898781" }}
-          >
-            {experiment.is_significant
-              ? "Statistically significant difference (p < 0.05)"
-              : "Not statistically significant yet"}
-          </p>
-        </div>
+      {hasResults && (
+        <p className="mt-3 text-xs text-text-muted">
+          p-value:{" "}
+          <span className="[font-variant-numeric:tabular-nums]">{experiment.p_value}</span>
+          {" · "}
+          {experiment.is_significant
+            ? "Statistically significant difference (p < 0.05)"
+            : "Not statistically significant yet"}
+        </p>
       )}
-    </div>
+    </AnimatedCard>
   );
 }
 
@@ -119,44 +134,36 @@ export function ExperimentsPanel({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4">
-        {experiments.map((experiment) => (
-          <ExperimentCard key={experiment.id} slug={slug} experiment={experiment} />
-        ))}
-        {experiments.length === 0 && (
-          <p className="text-sm text-neutral-500">No experiments yet.</p>
-        )}
-      </div>
+      {experiments.length === 0 ? (
+        <EmptyState
+          icon={<FlaskConical className="h-5 w-5" />}
+          title="No experiments yet"
+          description="Create one below and record variant results to check significance."
+        />
+      ) : (
+        <div className="flex flex-col gap-4">
+          {experiments.map((experiment) => (
+            <ExperimentCard key={experiment.id} slug={slug} experiment={experiment} />
+          ))}
+        </div>
+      )}
 
-      <form action={createFormAction} className="flex flex-wrap items-end gap-2">
-        <label className="flex flex-col gap-1 text-xs text-neutral-500">
+      <form action={createFormAction} className="flex flex-wrap items-end gap-2 rounded-xl border border-border p-3">
+        <label className="flex flex-col gap-1 text-xs text-text-muted">
           Experiment name
-          <input
-            name="name"
-            required
-            placeholder="New onboarding flow"
-            className="rounded-md border border-neutral-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-900"
-          />
+          <input name="name" required placeholder="New onboarding flow" className={inputClass} />
         </label>
-        <label className="flex flex-col gap-1 text-xs text-neutral-500">
+        <label className="flex flex-col gap-1 text-xs text-text-muted">
           Variant A name
-          <input
-            name="variantAName"
-            defaultValue="Control"
-            className="w-28 rounded-md border border-neutral-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-900"
-          />
+          <input name="variantAName" defaultValue="Control" className={`w-28 ${inputClass}`} />
         </label>
-        <label className="flex flex-col gap-1 text-xs text-neutral-500">
+        <label className="flex flex-col gap-1 text-xs text-text-muted">
           Variant B name
-          <input
-            name="variantBName"
-            defaultValue="Treatment"
-            className="w-28 rounded-md border border-neutral-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-900"
-          />
+          <input name="variantBName" defaultValue="Treatment" className={`w-28 ${inputClass}`} />
         </label>
         <SubmitButton pendingText="Creating...">Create experiment</SubmitButton>
       </form>
-      {createState.error && <p className="text-sm text-red-600">{createState.error}</p>}
+      {createState.error && <p className="text-sm text-status-critical">{createState.error}</p>}
     </div>
   );
 }

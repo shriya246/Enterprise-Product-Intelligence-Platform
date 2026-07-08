@@ -19,6 +19,11 @@ export const toggleFlagSchema = z.object({
   isEnabled: z.coerce.boolean(),
 });
 
+export const updateFlagRolloutSchema = z.object({
+  flagId: z.string().uuid(),
+  rolloutPct: z.coerce.number().int().min(0).max(100),
+});
+
 export const createExperimentSchema = z.object({
   name: z.string().trim().min(1).max(160),
   variantAName: z.string().trim().min(1).max(60).default("A"),

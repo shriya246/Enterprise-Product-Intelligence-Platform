@@ -8,6 +8,7 @@ import {
   createFlagSchema,
   toggleFlagSchema,
   updateExperimentCountsSchema,
+  updateFlagRolloutSchema,
 } from "@/lib/validation/experiments";
 import { twoProportionZTest } from "@/lib/stats/ab-test";
 
@@ -69,6 +70,26 @@ export async function toggleFlag(slug: string, formData: FormData): Promise<void
   await supabase
     .from("feature_flags")
     .update({ is_enabled: parsed.data.isEnabled })
+    .eq("id", parsed.data.flagId)
+    .eq("org_id", org.orgId);
+
+  revalidatePath(`/org/${slug}/experiments`);
+}
+
+export async function updateFlagRollout(slug: string, formData: FormData): Promise<void> {
+  const org = await requireOrgMembership(slug);
+  assertAdmin(org.role);
+
+  const parsed = updateFlagRolloutSchema.safeParse({
+    flagId: formData.get("flagId"),
+    rolloutPct: formData.get("rolloutPct"),
+  });
+  if (!parsed.success) return;
+
+  const supabase = await createClient();
+  await supabase
+    .from("feature_flags")
+    .update({ rollout_pct: parsed.data.rolloutPct })
     .eq("id", parsed.data.flagId)
     .eq("org_id", org.orgId);
 

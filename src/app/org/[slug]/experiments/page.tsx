@@ -2,6 +2,8 @@ import { requireOrgMembership } from "@/lib/org";
 import { createClient } from "@/lib/supabase/server";
 import { FlagsPanel } from "./flags-panel";
 import { ExperimentsPanel } from "./experiments-panel";
+import { PageHeader } from "@/components/ui/page-header";
+import { SectionHeader } from "@/components/ui/section-header";
 
 export default async function ExperimentsPage({
   params,
@@ -27,20 +29,18 @@ export default async function ExperimentsPage({
 
   return (
     <div className="flex flex-col gap-8">
-      <div>
-        <h1 className="text-xl font-semibold">Experiments</h1>
-        <p className="text-sm text-neutral-500">
-          Feature flags gate rollout; experiments check whether a variant difference is real.
-        </p>
-      </div>
+      <PageHeader
+        title="Experiments"
+        description="Feature flags gate rollout; experiments check whether a variant difference is real."
+      />
 
       <section>
-        <h2 className="mb-3 text-sm font-medium text-neutral-500">Feature flags</h2>
+        <SectionHeader title="Feature flags" />
         <FlagsPanel slug={slug} flags={flags ?? []} />
       </section>
 
       <section>
-        <h2 className="mb-3 text-sm font-medium text-neutral-500">A/B experiments</h2>
+        <SectionHeader title="A/B experiments" />
         <ExperimentsPanel slug={slug} experiments={experiments ?? []} />
       </section>
     </div>
