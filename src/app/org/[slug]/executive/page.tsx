@@ -1,14 +1,7 @@
 import { requireOrgMembership } from "@/lib/org";
 import { createClient } from "@/lib/supabase/server";
-import {
-  activeUsers,
-  featureAdoption,
-  weeklyRetentionCurve,
-  type UsageEvent,
-} from "@/lib/analytics";
-import { StatTiles } from "../dashboard/charts";
-
-const LOOKBACK_DAYS = 90;
+import { getOrgAnalyticsData } from "@/lib/get-org-analytics";
+import { StatTiles } from "@/components/charts/analytics-charts";
 
 const STATUS_COLORS = {
   good: "#0ca30c",
@@ -25,38 +18,16 @@ export default async function ExecutivePage({
   const { slug } = await params;
   const org = await requireOrgMembership(slug);
   const supabase = await createClient();
+  const data = await getOrgAnalyticsData(supabase, org.orgId);
 
-  const since = new Date();
-  since.setDate(since.getDate() - LOOKBACK_DAYS);
+  const { data: feedbackRows } = await supabase
+    .from("feedback_items")
+    .select("sentiment")
+    .eq("org_id", org.orgId);
 
-  const [{ data: eventRows }, { data: featureRows }, { data: feedbackRows }] = await Promise.all([
-    supabase
-      .from("events")
-      .select("distinct_id, event_name, occurred_at")
-      .eq("org_id", org.orgId)
-      .gte("occurred_at", since.toISOString())
-      .limit(10000),
-    supabase.from("features").select("key, name").eq("org_id", org.orgId),
-    supabase.from("feedback_items").select("sentiment").eq("org_id", org.orgId),
-  ]);
+  const week4Retention = data.retention[Math.min(4, data.retention.length - 1)]?.retentionPct ?? null;
 
-  const events: UsageEvent[] = (eventRows ?? []).map((row) => ({
-    distinctId: row.distinct_id,
-    eventName: row.event_name,
-    occurredAt: row.occurred_at,
-  }));
-
-  const asOf = new Date();
-  const dau = activeUsers(events, 1, asOf);
-  const wau = activeUsers(events, 7, asOf);
-  const mau = activeUsers(events, 30, asOf);
-
-  const retention = weeklyRetentionCurve(events, 4);
-  const week4Retention = retention[retention.length - 1]?.retentionPct ?? null;
-
-  const adoption = featureAdoption(events, featureRows ?? [], 30, asOf)
-    .sort((a, b) => b.adoptionPct - a.adoptionPct)
-    .slice(0, 5);
+  const adoption = [...data.adoption].sort((a, b) => b.adoptionPct - a.adoptionPct).slice(0, 5);
 
   const sentimentCounts = { positive: 0, neutral: 0, negative: 0 };
   for (const row of feedbackRows ?? []) {
@@ -71,11 +42,11 @@ export default async function ExecutivePage({
       <div>
         <h1 className="text-xl font-semibold">Executive summary</h1>
         <p className="text-sm text-neutral-500">
-          Everything on one screen — last {LOOKBACK_DAYS} days, no filters required.
+          Everything on one screen — last {data.lookbackDays} days, no filters required.
         </p>
       </div>
 
-      <StatTiles dau={dau} wau={wau} mau={mau} />
+      <StatTiles dau={data.dau} wau={data.wau} mau={data.mau} />
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">

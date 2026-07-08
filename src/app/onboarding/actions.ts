@@ -48,7 +48,7 @@ export async function createOrg(
     return { error: memberError.message };
   }
 
-  redirect(`/org/${org.slug}/dashboard`);
+  redirect(`/org/${org.slug}/overview`);
 }
 
 export async function logout() {

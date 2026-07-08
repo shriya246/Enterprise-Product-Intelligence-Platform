@@ -31,7 +31,7 @@ export default async function OnboardingPage() {
             {orgs.map((org) => (
               <li key={org.slug}>
                 <Link
-                  href={`/org/${org.slug}/dashboard`}
+                  href={`/org/${org.slug}/overview`}
                   className="block rounded-md border border-neutral-300 px-3 py-2 text-sm hover:bg-neutral-50 dark:border-neutral-700 dark:hover:bg-neutral-900"
                 >
                   {org.name}

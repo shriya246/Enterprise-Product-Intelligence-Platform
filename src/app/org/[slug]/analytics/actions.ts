@@ -53,6 +53,6 @@ export async function addFeature(
     return { error: error.message };
   }
 
-  revalidatePath(`/org/${slug}/dashboard`);
+  revalidatePath(`/org/${slug}/analytics`);
   return {};
 }
