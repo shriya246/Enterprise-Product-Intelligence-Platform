@@ -1,7 +1,11 @@
+import { Filter } from "lucide-react";
 import { requireOrgMembership } from "@/lib/org";
 import { createClient } from "@/lib/supabase/server";
 import { getOrgAnalyticsData } from "@/lib/get-org-analytics";
 import { FunnelBuilder } from "@/components/charts/analytics-charts";
+import { PageHeader } from "@/components/ui/page-header";
+import { ChartCard } from "@/components/ui/chart-card";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export default async function FunnelsPage({
   params,
@@ -15,20 +19,21 @@ export default async function FunnelsPage({
 
   return (
     <div className="flex flex-col gap-8">
-      <div>
-        <h1 className="text-xl font-semibold">Funnels</h1>
-        <p className="text-sm text-neutral-500">
-          Last {data.lookbackDays} days · build an ordered funnel from any events you&apos;re
-          tracking.
-        </p>
-      </div>
+      <PageHeader
+        title="Funnels"
+        description={`Last ${data.lookbackDays} days · build an ordered funnel from any events you're tracking.`}
+      />
 
       {data.eventNames.length === 0 ? (
-        <p className="text-sm text-neutral-500">
-          No events yet. Send some with the tracking snippet to see a funnel here.
-        </p>
+        <EmptyState
+          icon={Filter}
+          title="No events yet"
+          description="Send some with the tracking snippet to see a funnel here."
+        />
       ) : (
-        <FunnelBuilder events={data.events} eventNames={data.eventNames} />
+        <ChartCard title="Conversion funnel" subtitle="Click event names to add or remove steps">
+          <FunnelBuilder events={data.events} eventNames={data.eventNames} />
+        </ChartCard>
       )}
     </div>
   );
