@@ -35,7 +35,7 @@ Living checklist for the redesign pass. One page or reusable component per item,
 - [x] Feedback themes page (new — theme cards, clusters, severity indicator, detail drawer)
 - [x] AI Assistant page redesign (message bubbles, prompt chips, evidence cards, streaming effect, empty state — confidence badge deferred, no real confidence signal exists to show without fabricating one)
 - [x] Roadmap page redesign (kanban + status/priority badges, AI recommendation card, dependency indicator — detail modal deferred, cards already show full detail inline)
-- [ ] PRD Generator page redesign (persona/business-goal inputs, related feedback selector, PRD preview, copy-Markdown, quality checklist)
+- [x] PRD Generator page redesign (persona/business-goal inputs now real AI prompt inputs, related feedback theme selector, copy-Markdown, quality checklist — separate save button deferred, generation already saves immediately by design, consistent with feedback clustering and roadmap prioritization)
 - [ ] Experiments page redesign (flag cards w/ rollout slider, A/B variant comparison, confidence indicator, kill switch)
 - [ ] Executive Dashboard redesign (health score, KPI grid, AI summary, risks/opportunities, presentation-ready layout)
 - [ ] Settings page redesign + new API Keys tab (surfaces the org write_key + SDK snippet — closes the functional gap noted above)

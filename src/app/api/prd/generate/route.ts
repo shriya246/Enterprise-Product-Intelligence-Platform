@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { orgId, featureIdea } = parsed.data;
+  const { orgId, featureIdea, persona, businessGoal, relatedTheme } = parsed.data;
 
   const { data: membership } = await supabase
     .from("org_members")
@@ -52,7 +52,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const draft = await generatePrd(featureIdea);
+  let relatedFeedback: string | undefined;
+  if (relatedTheme) {
+    const { data: feedbackRows } = await supabase
+      .from("feedback_items")
+      .select("body")
+      .eq("org_id", orgId)
+      .eq("theme", relatedTheme)
+      .limit(10);
+    relatedFeedback = feedbackRows?.map((r) => `- ${r.body}`).join("\n");
+  }
+
+  const draft = await generatePrd({ featureIdea, persona, businessGoal, relatedFeedback });
 
   const { data: saved, error } = await supabase
     .from("prd_drafts")
