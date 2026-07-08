@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { Loader2, Sparkles } from "lucide-react";
 
 export function PrioritizeButton({ orgId }: { orgId: string }) {
   const router = useRouter();
@@ -37,16 +39,23 @@ export function PrioritizeButton({ orgId }: { orgId: string }) {
 
   return (
     <div className="flex items-center gap-3">
-      <button
+      <motion.button
         type="button"
         onClick={handleClick}
         disabled={status === "loading"}
-        className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm disabled:opacity-60 dark:border-neutral-700"
+        whileHover={status === "loading" ? undefined : { scale: 1.02 }}
+        whileTap={status === "loading" ? undefined : { scale: 0.98 }}
+        className="flex items-center gap-1.5 rounded-lg bg-gradient-brand px-3.5 py-1.5 text-sm font-medium text-white shadow-glow-brand disabled:opacity-60"
       >
+        {status === "loading" ? (
+          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+        ) : (
+          <Sparkles className="h-3.5 w-3.5" />
+        )}
         {status === "loading" ? "Prioritizing..." : "AI-recommend priority"}
-      </button>
+      </motion.button>
       {message && (
-        <p className={`text-xs ${status === "error" ? "text-red-600" : "text-neutral-500"}`}>
+        <p className={`text-xs ${status === "error" ? "text-status-critical" : "text-text-muted"}`}>
           {message}
         </p>
       )}

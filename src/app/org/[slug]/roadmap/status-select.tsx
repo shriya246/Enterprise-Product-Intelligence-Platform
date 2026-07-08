@@ -29,7 +29,7 @@ export function StatusSelect({
           updateRoadmapStatus(slug, formData);
         });
       }}
-      className="rounded-md border border-neutral-300 bg-transparent px-2 py-1 text-xs dark:border-neutral-700"
+      className="rounded-md border border-border bg-surface px-2 py-1 text-xs text-text-secondary outline-none focus:border-brand"
     >
       {STATUSES.map((s) => (
         <option key={s} value={s}>
