@@ -16,8 +16,8 @@ Living checklist for the redesign pass. One page or reusable component per item,
 
 ## Foundation (must land before individual pages)
 
-- [ ] Design system setup: Tailwind theme tokens (color scale, radii, shadows), Inter font via `next/font/google`, install `framer-motion` + `lucide-react`, refresh `globals.css`
-- [ ] Reusable components: `AppShell`, `Sidebar` (with active-indicator animation + mobile drawer), `TopNav` (org switcher, command search, notifications, user menu)
+- [x] Design system setup: Tailwind theme tokens (color scale, radii, shadows), Inter font via `next/font/google`, install `framer-motion` + `lucide-react`, refresh `globals.css`
+- [x] Reusable components: `AppShell`, `Sidebar` (with active-indicator animation + mobile drawer), `TopNav` (org switcher, command search, notifications, user menu) — also required splitting the old merged dashboard into Overview/Analytics/Funnels/Cohorts routes to match the sidebar IA
 - [ ] Reusable components: `MetricCard`, `ChartCard`, `InsightCard`, `AnimatedCard`
 - [ ] Reusable components: `StatusBadge`, `PriorityBadge`, `EmptyState`, `LoadingSkeleton`, `PageHeader`, `SectionHeader`
 - [ ] Reusable components: `CommandSearch`, `AIMessage`, `PromptChip`, `ExecutiveSummaryCard`
